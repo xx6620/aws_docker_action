@@ -24,7 +24,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-python:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:latest
 
   deploy:
     needs: build-and-push
@@ -37,10 +37,10 @@ jobs:
           username: ubuntu
           key: ${{ secrets.AWS_SSH_KEY }}
           script: |
-            sudo docker stop my-app || true
-            sudo docker rm my-app || true
+            sudo docker stop my-python-app || true
+            sudo docker rm my-python-app || true
             # 이미지 Clean up (용량 확보를 위해 오래된 이미지 삭제)
             sudo docker image prune -f
-            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-python:latest
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:latest
             # -p 8501:8501 옵션을 추가하여 외부 접속 허용
-            sudo docker run -d --name my-app -p 8501:8501 ${{ secrets.DOCKERHUB_USERNAME }}/my-python:latest
+            sudo docker run -d --name my-python-app -p 8501:8501 ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:latest
